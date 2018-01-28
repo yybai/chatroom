@@ -1,0 +1,32 @@
+extends layout
+
+block content
+    nav(class="navbar") 
+        div(class="header-image-div")
+        h1(class="roomHeader") Sign Up
+        h1(class="roomHeader2") Sign Up
+
+    div(class="signup-div")
+        form(method="POST", action="/user/signup",class="signup-form")
+            lable Enter Username
+                br
+                input(name="username", type="username", placeholder="Username",class="input-name")
+            br
+            br
+            lable Enter Password
+                br
+                input(name="password", type="password", placeholder="Password",class="input-password")
+            
+            span(class="progress-bar_text")
+            br
+            input(type="submit", value="Signup",class="signup-button")
+            br
+            a(href="/user/login",class="have-account") Already have account ?
+
+    
+
+block script
+    
+    //- script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js")
+    script(src="/js/main.js")
+

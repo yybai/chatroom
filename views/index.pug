@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  nav(class="navbar")
+    div(class="header-image-div")
+    //- img(class="header-image",src="images/header-blur-image.png")
+    h1(class="roomHeader") Welcome
+    h1(class="roomHeader2") Welcome
+
+  div(class = "front-page-bg")
+    a(href='/user/login') login
+      //- p by #{name}
+      //- table
+      //-   tr 
+      //-     th Firstname
+      //-     th Lastname
+      //-     th email
+      //-     th age
+      //-   each student in students
+      //-     tr
+      //-       td
+      //-         a(href=`/students/${student._id}`)=student.firstname
+      //-       td=student.lastname
+      //-       td=student.email
+      //-       td=student.age
+      //- br
+      //- a(href='/students/add') Add Student
+  
+

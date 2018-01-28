@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  nav(class="navbar") 
+    div(class="header-image-div")
+    h1(class="roomHeader") Log in
+    h1(class="roomHeader2") Log in
+  form(method="POST", action="/user/login")
+    input(name="username", placeholder="Username")
+    br
+    input(name="password", type="password", placeholder="Password")
+    br
+    input(type="submit", value="Login")
+
+  a(href="/user/signup") Don't have account ?
+  a(href="/login/github") 使用Github登录
+  br
+  a(href="/") back

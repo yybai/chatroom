@@ -1,0 +1,192 @@
+extends layout
+
+block style
+  style.
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font: 13px Helvetica, Arial;
+    }
+
+    form {
+      background: #000;
+      padding: 3px;
+      position: fixed;
+      bottom: 0;
+      width: 90%;
+    }
+
+    form input {
+      border: 0;
+      padding: 10px;
+      width: 90%;
+      margin-right: .5%;
+    }
+
+    form button {
+      width: 9%;
+      background: rgb(130, 224, 255);
+      border: none;
+      padding: 10px;
+    }
+
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #messages li {
+      padding: 5px 10px;
+    }
+
+    #messages li:nth-child(odd) {
+      background: #eee;
+    }
+
+    #userListColumn{
+      float : right;
+      width: 10%;
+      height : 100%;
+      margin-top :-20px;
+      border : 1px solid black;
+      position:relative;
+      
+    }
+    #userList{
+      padding-top: 10px;
+      font-size:20px;
+    }
+    #onlineUsers{
+      font-weight: bold;
+      font-size:20px;
+    }
+    #username{
+      display:inline-block;
+      padding-right:15px;
+    }
+    #numUsers{
+      text-align:center;
+      font-size:30px;
+    }
+
+block content
+  if (user)
+    p#username logged in as : #{user.username}   
+    //- #username=user.username
+    a#logout(href='/user/logout') Logout
+  div#numUsers
+  
+  div#userListColumn
+    p#onlineUsers Online Users
+    p#userList
+  br
+
+
+  ul#messages
+    each message in messages
+      li(style=`color: ${message.color}`) #{message.user}: #{message.message}
+  form(action="")
+    input#m(type="text" required)
+    button Send
+  
+
+
+
+block script
+  script(src="https://code.jquery.com/jquery-1.11.1.js")
+  script(src="/scripts/socket.io-client/dist/socket.io.js")
+  script.
+    const socket = io();
+    
+    const color = `#${(0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6)}` ;
+    const user = !{JSON.stringify(user)};//javascript 拿server pass过来的information
+    //console.log(user);
+    socket.emit('logged in', {user:user.username});
+
+
+    $('form').submit(function(e) {
+      //- socket.emit('notification', $('#m').val());
+      e.preventDefault();
+      
+      socket.emit('chat message', { color, message: $('#m').val(), user: user.username });
+      $('#m').val('')
+    })
+
+    socket.emit('user list',{});
+    socket.on('online user',(obj) =>{
+      console.log(obj);
+      $('#userList').text('');
+      $('#numUsers').text(`There are:  ${obj.length} users online !`);
+      for (i = 0; i < obj.length ;i++ ){
+
+        $('#userList').append(`${obj[i]} <br>`);
+      }
+      //- $('#userList').text(`${obj}`);
+      //- $('#userList').append('<br>');
+    })
+
+    socket.on('chat broadcast', (obj) => {
+      console.log(obj.user);
+      console.log(user.username);
+      console.log(obj.user == user.username);
+      if (obj.user == user.username){
+        $('#messages').append(`<li style='color: black;
+                                          margin-right:10%;
+                                          text-align:right;
+                                          background-color:#d5ffce;
+                                          margin-bottom:5px;
+                                          padding-right:1px;
+                                '> ${obj.message} : ${obj.user}</li>`);
+      }else{
+        $('#messages').append(`<li style='color: ${obj.color};
+                                          background-color:#e0e0db;
+                                          margin-bottom:5px;
+                                          margin-right:10%;
+                                          '>${obj.user}: ${obj.message}</li>`);
+      }
+      
+      
+      
+    })
+
+    socket.on('disconnect',(obj)=>{
+      socket.emit('disconnection',{user:user.username});
+    });
+
+    socket.on('logged in info',(obj) =>{
+      $('#messages').append(`<li style = 'color:black; text-align:center; width:100%;'> ${obj.user} is online now!  `)
+    })
+
+    socket.on('logged out info',(obj) =>{
+      $('#messages').append(`<li style = 'color:grey; text-align:center;'> ${obj} left.  `)
+    })
+
+
+
+
+
+    //- socket.on('notification',function(msg){
+    //-   notice(msg);
+    //-   console.log(msg);
+    //- })
+
+    //- Notification.requestPermission(function(permission) {});
+
+    //- function notice(msg){
+    //-   let _notification = new Notification (`消息通知`,{
+    //-     body:`${msg}`,
+    //-     icon:'../img/whale-chat-logo.png',
+    //-   });
+    //-   setTimeout(function(){
+    //-     _notification.close();
+    //-   },3000);
+    //- }
+
+
+
+

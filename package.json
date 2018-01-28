@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "build": "./node_modules/.bin/webpack",
+    "start": "npm run-script build && node app.js"
   },
   "author": "Michael Chen",
   "license": "MIT",

@@ -37,29 +37,6 @@ app.use(passport.session());
 // passport config
 const Account = require('./models/students');
 passport.use(new LocalStrategy(Account.authenticate()));
-var GoogleStrategy = require('passport-google-oauth20').Strategy;
-
-passport.use(new GoogleStrategy({
-    clientID: "287022068466-h2g3ghm517hd7vl3i6alu0ua3tpkor58.apps.googleusercontent.com",
-    clientSecret: "hPLpqwV16NMjmrQ1LyeW2DJ0",
-    callbackURL: "http://localhost:3030/chat"
-  },
-  function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });
-  }
-));
-
-
-
-
-
-
-
-
-
-
 
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
@@ -76,7 +53,7 @@ app.use('/chat', chat);
 app.use('/user', user);
 
 // connect mongoDB
-mongoose.connect('mongodb://localhost:27017/webdxd', { useMongoClient:true });
+mongoose.connect('mongodb://leobai:1992taozi@ds117888.mlab.com:17888/webdxd', { useMongoClient:true });
 //                mongodb://webdxd:123456@ds255767.mlab.com:55767/fa-jan18
 mongoose.Promise = global.Promise
 
@@ -99,7 +76,7 @@ app.use((err, req, res, next)=> {
 /**
  * Get port from environment and store in Express.
  */
-const port = process.env.PORT || 3030;
+const port = process.env.PORT || 3000;
 app.set('port', port);
 
 /**
